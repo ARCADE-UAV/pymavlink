@@ -226,6 +226,17 @@ class mavserial(mavfile):
     def close(self):
         self.port.close()
 
+    def recv_msg(self):
+        '''message receive routine for serial link'''
+        self.pre_message()
+        s = self.recv()
+        if len(s) == 0:
+            return None
+        msg = self.mav.parse_buffer(s)
+        if msg is not None:
+            return msg[0]
+        return None
+
     def recv(self,n=None):
         if n is None:
             n = self.mav.bytes_needed()
