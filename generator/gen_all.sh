@@ -1,5 +1,7 @@
 #!/bin/sh
 
+mkdir python
+
 for protocol in 0.9 1.0; do
  for xml in message_definitions/v$protocol/*.xml; do
      base=$(basename $xml .xml)
