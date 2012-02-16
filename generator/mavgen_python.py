@@ -99,6 +99,20 @@ class MAVLink_message(object):
         self._msgbuf += struct.pack('<H', self._crc)
         return self._msgbuf
 
+# generic type definitions (correspond to C defininitions in mavlink_types.h : type mavlink_message_type_t):
+MAVLINK_TYPE_CHAR     =  0
+MAVLINK_TYPE_UINT8_T  =  1
+MAVLINK_TYPE_INT8_T   =  2
+MAVLINK_TYPE_UINT16_T =  3
+MAVLINK_TYPE_INT16_T  =  4
+MAVLINK_TYPE_UINT32_T =  5
+MAVLINK_TYPE_INT32_T  =  6
+MAVLINK_TYPE_UINT64_T =  7
+MAVLINK_TYPE_INT64_T  =  8
+MAVLINK_TYPE_FLOAT    =  9
+MAVLINK_TYPE_DOUBLE   = 10
+
+
 """, {'FILELIST' : ",".join(args),
       'PROTOCOL_MARKER' : xml.protocol_marker,
       'crc_extra' : xml.crc_extra,
