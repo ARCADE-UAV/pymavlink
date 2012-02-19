@@ -634,25 +634,37 @@ def mode_string_v10(msg):
         return mapping[msg.custom_mode]
     return "Mode(%u)" % msg.custom_mode
 
-    
 
-class x25crc(object):
-    '''x25 CRC - based on checksum.h from mavlink library'''
-    def __init__(self, buf=''):
-        self.crc = 0xffff
-        self.accumulate(buf)
 
-    def accumulate(self, buf):
-        '''add in some more bytes'''
-        bytes = array.array('B')
-        if isinstance(buf, array.array):
-            bytes.extend(buf)
-        else:
-            bytes.fromstring(buf)
-        accum = self.crc
-        for b in bytes:
-            tmp = b ^ (accum & 0xff)
-            tmp = (tmp ^ (tmp<<4)) & 0xFF
-            accum = (accum>>8) ^ (tmp<<8) ^ (tmp<<3) ^ (tmp>>4)
-            accum = accum & 0xFFFF
-        self.crc = accum
+
+try:
+    from swig.mavlink_crc import *
+
+    class x25crc(object):
+        '''x25 CRC - based on checksum.h from mavlink library'''
+        def __init__(self, buf=''):
+            self.crc = X25_INIT_CRC
+            self.accumulate(buf)
+
+        def accumulate(self, buf):
+            '''add in some more bytes'''
+            self.crc = crc_calc_str(buf, len(buf), self.crc)
+except:
+    print 'falling back to (slower) non-SWIG CRC code'
+
+    class x25crc(object):
+        '''x25 CRC - based on checksum.h from mavlink library'''
+        def __init__(self, buf=''):
+            self.crc = 0xffff
+            self.accumulate(buf)
+
+        def accumulate(self, buf):
+            '''add in some more bytes'''
+            accum = self.crc
+            for b in buf:
+                tmp = ord(b) ^ (accum & 0xff)
+                tmp = (tmp ^ (tmp<<4)) & 0xFF
+                accum = (accum>>8) ^ (tmp<<8) ^ (tmp<<3) ^ (tmp>>4)
+                accum = accum & 0xFFFF
+            self.crc = accum
+
