@@ -17,7 +17,7 @@ int crc_calc_str(char *data, int len, int crcAccum)
    int i;
    for (i = 0; i < len; i++)
    {
-      crcAccum = crc_calc((uint8_t)data[i], crcAccum);
+      crcAccum = crc_calc(data[i], crcAccum);
    }
    return crcAccum;
 }
